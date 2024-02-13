@@ -36,11 +36,16 @@ public class LeavesController : ControllerBase
         return Ok(leaves);
     }
 
-    [Authorize(Roles = "Manager")]
-    [HttpPost("approve/{employeeId}")]
-    public IActionResult ApproveLeave(int employeeId)
+    // [Authorize(Roles = "Manager")]
+    [HttpPut("approve/{employeeId}")]
+    public IActionResult ApproveLeave(int employeeId,int leaveId)
     {
-
-        return Ok();
+        var emp=_employeeService.GetEmployeeById(employeeId);
+        if(emp!=null){
+            var emp_leaves=emp.leaves.FirstOrDefault(e=>e.Leave_Id==leaveId);
+            emp_leaves.status="Accepted";
+            return Ok(1);
+        }
+        return NotFound();
     }
 }

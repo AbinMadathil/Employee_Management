@@ -10,25 +10,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<EmployeeService>();
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-})
-.AddCookie(options =>
-{
-    options.Cookie.Name = "EmployeeManagementCookie";
-    options.Events = new CookieAuthenticationEvents
-    {
-        OnRedirectToLogin = redirectContext =>
-        {
-            redirectContext.HttpContext.Response.StatusCode = 401;
-            return Task.CompletedTask;
-        }
-    };
-});
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+// builder.Services.AddAuthentication(options =>
+// {
+//     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+// })
+// .AddCookie(options =>
+// {
+//     options.Cookie.Name = "EmployeeManagementCookie";
+//     options.Events = new CookieAuthenticationEvents
+//     {
+//         OnRedirectToLogin = redirectContext =>
+//         {
+//             redirectContext.HttpContext.Response.StatusCode = 401;
+//             return Task.CompletedTask;
+//         }
+//     };
+// });
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
@@ -45,7 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

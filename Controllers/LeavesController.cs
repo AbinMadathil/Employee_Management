@@ -23,6 +23,7 @@ public class LeavesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Employee")]
     public IActionResult ApplyForLeave(int employeeId, LeaveDTO leaveDto)
     {
         _employeeService.ApplyLeave(employeeId, leaveDto);
@@ -30,13 +31,14 @@ public class LeavesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Manager")]
     public IActionResult GetEmployeeLeaves(int EmployeeId)
     {
         var leaves = _employeeService.GetLeaves(EmployeeId);
         return Ok(leaves);
     }
 
-    // [Authorize(Roles = "Manager")]
+    [Authorize(Roles = "Manager")]
     [HttpPut("approve/{employeeId}")]
     public IActionResult ApproveLeave(int employeeId,int leaveId)
     {

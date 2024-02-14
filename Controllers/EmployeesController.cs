@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EmployeeManagement.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize(Roles = "Manager")]
+ 
 public class EmployeesController : ControllerBase
 {
     private readonly EmployeeService _employeeService;
@@ -23,6 +23,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Manager")]
     public IActionResult AddEmployee(EmployeeDTO employee)
     {
         try
@@ -41,6 +42,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Manager")]
     public IActionResult GetAllEmployees()
     {
         var employees = _employeeService.GetAllEmployees();
@@ -48,6 +50,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "Employee,Manager")]
     public IActionResult GetEmployeeById(int id)
     {
         var employee = _employeeService.GetEmployeeById(id);
